@@ -5,17 +5,63 @@ from flask import Flask
 from flask import request
 from flask_restful import Resource
 from flask_restful import Api
+from flask_httpauth import HTTPBasicAuth
 from api_sqlalchemy_exercicio_models import Programador
+from api_sqlalchemy_exercicio_models import Usuarios
 from api_sqlalchemy_exercicio_models import Habilidade
 from api_sqlalchemy_exercicio_models import ProgramadorHasHabilidade
 
+
+auth = HTTPBasicAuth()
 app = Flask(__name__)
 api = Api(app)
+
+# Usando authenticação em HARDCODE
+# USUARIOS = {
+#     'rcvdigo':'1233',
+#     'ptcs': '321'
+# }
+
+
+# @auth.verify_password
+# def verificacao(login, senha):
+#     """
+#     Verifica a autenticação do usuário.
+
+#     Args:
+#         login (str): Nome de usuário.
+#         senha (str): Senha do usuário.
+
+#     Returns:
+#         bool: True se a autenticação for bem-sucedida, False caso contrário.
+#     """
+#     if not (login, senha):
+#         return False
+#     return USUARIOS.get(login) == senha
+
+# Usando authenticação no banco de dados
+@auth.verify_password
+def verificacao(login, senha):
+    """
+    Verifica a autenticação do usuário.
+
+    Args:
+        login (str): Nome de usuário.
+        senha (str): Senha do usuário.
+
+    Returns:
+        bool: True se a autenticação for bem-sucedida, False caso contrário.
+    """
+    if not (login, senha):
+        return False
+    return Usuarios.query.filter_by(login=login, senha=senha).first()
+
 
 class ProgramadorRestful(Resource):
     """
     Classe que representa um recurso RESTful para manipulação de programadores.
     """
+    @auth.login_required
     def get(self, nome):
         """
         Obtém detalhes de um programador pelo nome.

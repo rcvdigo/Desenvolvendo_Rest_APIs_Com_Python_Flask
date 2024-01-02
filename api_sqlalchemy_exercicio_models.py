@@ -19,6 +19,44 @@ Base = declarative_base()
 Base.query = db_session.query_property()
 # Final da criação do banco de dados
 
+class Usuarios(Base):
+    """
+    Classe que representa a tabela 'usuarios' no banco de dados.
+
+    Atributos:
+        id (int): Identificador único do usuário.
+        login (str): Nome de usuário.
+        senha (str): Senha do usuário.
+    """
+    __tablename__ = 'usuarios'
+    id = Column(Integer, primary_key=True)
+    login = Column(String(20), unique=True)
+    senha = Column(String(20))
+
+    def __repr__(self):
+        """
+        Retorna uma representação textual do objeto Usuario.
+
+        Returns:
+            str: String representando o objeto Usuario.
+        """
+        return f'Usuario: {self.login}'
+
+    def save(self):
+        """
+        Salva o objeto Usuario no banco de dados.
+        """
+        db_session.add(self)
+        db_session.commit()
+
+    def delete(self):
+        """
+        Exclui o objeto Usuario do banco de dados.
+        """
+        db_session.delete(self)
+        db_session.commit()
+
+
 class Programador(Base):
     """
     Classe que representa a tabela 'programador' no banco de dados.

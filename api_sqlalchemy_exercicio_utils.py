@@ -4,6 +4,7 @@ api_atividades (Arquivo: utils.py)
 from api_sqlalchemy_exercicio_models import Programador
 from api_sqlalchemy_exercicio_models import Habilidade
 from api_sqlalchemy_exercicio_models import ProgramadorHasHabilidade
+from api_sqlalchemy_exercicio_models import Usuarios
 
 
 def insere():
@@ -162,14 +163,37 @@ def deleta_pessoa(person_id=None, nome=None):
             print(f"Nenhum programador encontrado com o nome '{nome}'")
 
 
+def insere_usuario(login, senha):
+    """
+    Insere um novo usuário no banco de dados.
+
+    Args:
+        login (str): Nome de usuário.
+        senha (str): Senha do usuário.
+    """
+    usuario = Usuarios(login=login, senha=senha)
+    usuario.save()
+
+
+def consultar_usuarios():
+    """
+    Consulta e imprime todos os usuários cadastrados no banco de dados.
+    """
+    usuarios = Usuarios.query.all()
+    print(usuarios)
+
+
 if __name__ == '__main__':
     # insere()
     # print("-="*13)
     # consulta() # Todos os registros
     print("-="*13)
-    consulta_programador()  # Filtrando o registro
-    consulta_habilidade()  # Filtrando o registro
-    consulta_p_h()  # Filtrando o registro
+    # insere_usuario(login='rcvdigo', senha='1234')
+    # insere_usuario(login='pamtheo', senha='4321')
+    # consultar_usuarios()
+    # consulta_programador()  # Filtrando o registro
+    # consulta_habilidade()  # Filtrando o registro
+    # consulta_p_h()  # Filtrando o registro
     print("-="*13)
     # alterar_nome_pessoa(nome_atualizado=None, nome_anterior="Teste")
     # print("-="*13)
